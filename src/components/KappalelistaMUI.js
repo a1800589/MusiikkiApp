@@ -9,13 +9,15 @@ import Typography from '@material-ui/core/Typography';
 function KappalelistaMUI (props) {
   let kappalelista = props.kappaleet.map(function(kappale, index) {
     return (
-       <Card item='true' key={index} style={{ width: 350, marginTop: 30, margin: 10}}>
+       <Card item='true' key={index} style={{ width: 350, marginTop: 40, margin: 10}}>
           <CardHeader title= { kappale.kappale.toUpperCase() }
-                      subheader={ kappale.Albumi }/>
+                      subheader={ kappale.Albumi + ' | '+ kappale.Artisti}  />
+
           <CardContent>
+<Typography variant='body1' color="textSecondary" gutterBottom>Genre: { kappale.Genre }</Typography>
             <CardMedia style={{ height:300 }} image={kappale.kuva} title='Albumikuva' />
 
-            <Typography variant='body1'>Genre: { kappale.Genre }</Typography>
+
 
           </CardContent>
        </Card>);
