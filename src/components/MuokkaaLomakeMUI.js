@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { Create, Clear, Attachment } from '@material-ui/icons';
+import { Create, Clear, Attachment, Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import {BrowserRouter, Route, Switch, Link, Redirect} from "react-router-dom";
 
@@ -14,17 +14,22 @@ import axios from 'axios';
 
 const url = 'http://localhost:8080';
 
-class LisaalomakeMUI extends Component {
+class MuokkaaLomakeMUI extends Component {
   constructor(props) {
       super(props);
-      this.state = { Kappale: '', Artisti: '', Albumi:'', Genre: '', kuva: null, viesti: '', muutettu: false };
+      this.state = { id: '', Kappale: '', Artisti: '', Albumi:'', Genre: '', kuva: null, viesti: '', muutettu: false };
+  }
+
+  componentDidMount = () => {
+  const { match: { params } } = this.props;
+  this.setState({id: params.id});
   }
 
   muuta = (e) => {
     this.setState( { [e.target.name]: e.target.value } );
   }
   lisaa = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
 
         const formData = new FormData();
         formData.append('kappale', this.state.kappale);
@@ -32,20 +37,27 @@ class LisaalomakeMUI extends Component {
         formData.append('albumi', this.state.Albumi);
         formData.append('genre', this.state.Genre);
         formData.append('kuva', this.state.kuva);
-        axios.post(url + '/kappale/add', formData)
+        formData.append('id', this.state.id);
+        axios.post(url + '/kappale/muokkaa/'+this.state.id,formData)
          .then(response => {
             if (response.status === 200) {
-               this.setState({viesti: 'Lisättiin'});
-                this.setState({muutettu: true});
+               this.setState({viesti: 'Muokattiin'});
                this.tyhjenna();
             } else {
-               this.setState({ viesti: 'Lisäys ei onnistunut'});
+               this.setState({ viesti: 'Muokkaus ei onnistunut'});
             }
          })
   }
 
+  poista = (id) => {
+return fetch(url + '/kappale/delete/'+this.state.id)
+  this.setState({muutettu: true});
+
+
+  }
+
   tyhjenna = (e) => {
-    //e.preventDefault();
+  //  e.preventDefault();
     this.setState( {  kappale: '', Artisti: '', Albumi:'', Genre: '', kuva: null } );
   }
 
@@ -63,7 +75,6 @@ class LisaalomakeMUI extends Component {
 
     const { classes } = this.props;
     return (
-      <div>
       <form>
         <TextField label='Biisi' name='kappale' value={ this.state.kappale }
                onChange={ this.muuta } margin='normal' required
@@ -89,19 +100,19 @@ class LisaalomakeMUI extends Component {
                </InputLabel>
    <br/>   <br/>
   <br/>
-        <Button onClick={this.lisaa} variant='contained' color='primary' className={ classes.button }><Create /> Lisää</Button>
+        <Button onClick={this.lisaa} variant='contained' color='primary' className={ classes.button }><Create /> Muokkaa</Button>
 
-        <Button onClick={this.tyhjenna} variant='contained'  color='secondary' className={ classes.button }><Clear /> Tyhjennä</Button>
+        <Button onClick={this.poista} variant='contained'  color='secondary' className={ classes.button }><Delete /> Poista</Button>
       </form>
-
-      </div>
-
     );
+
     if (this.state.muutettu === true) {
     return (
     <Redirect to={ {pathname: '/listaa'} } />
     )
     }
+
+
   }
 }
 
@@ -110,4 +121,4 @@ const styles = {
   button: { marginRight: 20}
 }
 
-export default withStyles(styles)(LisaalomakeMUI);
+export default withStyles(styles)(MuokkaaLomakeMUI);

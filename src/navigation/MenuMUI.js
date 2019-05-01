@@ -38,6 +38,7 @@ class MenuMUI extends React.Component {
       onClose={this.handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
+      <MenuItem key="placeholder" style={{display: "none"}} />
         <MenuItem onClick={this.handleClose} component={Link} to='/biisi'><Home />
             <ListItemText inset primary="Etusivu" />
         </MenuItem>

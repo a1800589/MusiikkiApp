@@ -29,11 +29,15 @@ class Songoftheday extends Component {
   render () {
     return (
 <div>
+<h1>
+Tervetuloa </h1>
+<p> Teemun musiikki lista sovellus</p>
 <h4> Päivän biisi</h4>
       <p>
 
         { this.state.title } <br />
-        { this.state.date }
+
+        <p> Haettu: { this.state.date }</p>
       </p>
       </div>
     );
