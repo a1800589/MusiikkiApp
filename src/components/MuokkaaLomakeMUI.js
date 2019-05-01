@@ -50,8 +50,15 @@ class MuokkaaLomakeMUI extends Component {
   }
 
   poista = (id) => {
-return fetch(url + '/kappale/delete/'+this.state.id)
-  this.setState({muutettu: true});
+    return fetch(url + '/kappale/delete/'+this.state.id)
+    .then(response => {
+   if (response.status === 200) {
+      this.setState({viesti: 'Muokattiin'});
+      this.tyhjenna();
+   } else {
+      this.setState({ viesti: 'Muokkaus ei onnistunut'});
+   }
+})
 
 
   }
@@ -67,6 +74,12 @@ return fetch(url + '/kappale/delete/'+this.state.id)
 
 
   render() {
+
+    if (this.state.viesti === 'Muokattiin') {
+    return (
+    <Redirect to={ {pathname: '/listaa'} } />
+    )
+    }
 
     let kuvanNimi = '';
     if (this.state.kuva !== null) {
@@ -106,11 +119,7 @@ return fetch(url + '/kappale/delete/'+this.state.id)
       </form>
     );
 
-    if (this.state.muutettu === true) {
-    return (
-    <Redirect to={ {pathname: '/listaa'} } />
-    )
-    }
+
 
 
   }

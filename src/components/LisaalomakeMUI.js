@@ -17,7 +17,7 @@ const url = 'http://localhost:8080';
 class LisaalomakeMUI extends Component {
   constructor(props) {
       super(props);
-      this.state = { Kappale: '', Artisti: '', Albumi:'', Genre: '', kuva: null, viesti: '', muutettu: false };
+      this.state = { Kappale: '', Artisti: '', Albumi:'', Genre: '', kuva: null, viesti: '' };
   }
 
   muuta = (e) => {
@@ -36,7 +36,6 @@ class LisaalomakeMUI extends Component {
          .then(response => {
             if (response.status === 200) {
                this.setState({viesti: 'Lisättiin'});
-                this.setState({muutettu: true});
                this.tyhjenna();
             } else {
                this.setState({ viesti: 'Lisäys ei onnistunut'});
@@ -55,6 +54,13 @@ class LisaalomakeMUI extends Component {
 
 
   render() {
+
+    if (this.state.viesti === 'Lisättiin') {
+    return (
+    <Redirect to={ {pathname: '/listaa'} } />
+    )
+    }
+
 
     let kuvanNimi = '';
     if (this.state.kuva !== null) {
@@ -97,11 +103,7 @@ class LisaalomakeMUI extends Component {
       </div>
 
     );
-    if (this.state.muutettu === true) {
-    return (
-    <Redirect to={ {pathname: '/listaa'} } />
-    )
-    }
+
   }
 }
 

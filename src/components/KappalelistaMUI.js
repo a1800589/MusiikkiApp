@@ -13,23 +13,53 @@ import { Create, Clear, Attachment, Edit, Delete } from '@material-ui/icons';
 
 const url = 'http://localhost:8080';
 
-function KappalelistaMUI (props) {
-  let kappalelista = props.kappaleet.map(function(kappale, index) {
-    return (
-       <Card item='true' key={index} style={{ width: 350, marginTop: 40, margin: 10}}>
-          <CardHeader title= { kappale.kappale.toUpperCase() }
-           subheader={ kappale.albumi + ' | '+ kappale.artisti  + ' | '+ kappale.id}  />
+class KappalelistaMUI extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { kappaleet: this.props.kappaleet}
+  }
 
-          <CardContent>
-          <Typography variant='body1' color="textSecondary" gutterBottom>Genre: { kappale.genre }</Typography>
-          <CardMedia style={{ height:300 }} image={url + '/download/' + kappale.kuva} title='Albumikuva' />
+  poista = (id) => {
+    return fetch(url + '/kappale/delete/'+this.state.id)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState(prevState => ({kappaleet: prevState.kappaleet.filter(kappale => kappale.id !== id)
+      }));
+    })
+    }
 
-          </CardContent>
-<Button component={Link} to={'/muokkaa/' + kappale.id}><Edit /></Button>
+render(){
 
-       </Card>);
-    });
- return ( <Grid container spacing={26}>{ kappalelista }</Grid> );
-}
+    if (this.state.kappaleet.length === 0)
+     {
+    return (<Typography variant='body1'>Yhtään kappaletta ei löytynyt</Typography>)
+    }
+
+
+    return(
+      <Grid container spacing={26}>
+      { this.state.kappaleet.map(kappaleet => {
+return(
+  <Grid item key={kappaleet.id}>
+
+  <Card style={{ width: 350, marginTop: 40, margin: 10}}>
+
+     <CardHeader title= { kappaleet.kappale.toUpperCase() }
+      subheader={ kappaleet.albumi + ' | '+ kappaleet.artisti  + ' | '+ kappaleet.id}  />
+
+     <CardContent>
+
+     <Typography variant='body1' color="textSecondary" gutterBottom>Genre: { kappaleet.genre }</Typography>
+     <CardMedia style={{ height:300 }} image={url + '/download/' + kappaleet.kuva} title='Albumikuva' />
+
+
+  <Button component={Link} to={'/muokkaa/' + kappaleet.id}><Edit /></Button>
+  <Button onClick={this.poista.bind(this, kappaleet.id)}><Delete /></Button>
+  </CardContent>
+  </Card>
+</Grid>
+)
+})
+}</Grid>)}}
 
 export default KappalelistaMUI;
