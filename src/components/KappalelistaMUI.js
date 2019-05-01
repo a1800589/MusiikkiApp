@@ -20,7 +20,7 @@ class KappalelistaMUI extends Component {
   }
 
   poista = (id) => {
-    return fetch(url + '/kappale/delete/'+this.state.id)
+    return fetch(url + '/kappale/delete/'+ id)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState(prevState => ({kappaleet: prevState.kappaleet.filter(kappale => kappale.id !== id)
@@ -37,7 +37,7 @@ render(){
 
 
     return(
-      <Grid container spacing={26}>
+      <Grid container spacing={8}>
       { this.state.kappaleet.map(kappaleet => {
 return(
   <Grid item key={kappaleet.id}>
